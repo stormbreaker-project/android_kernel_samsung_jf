@@ -3705,6 +3705,7 @@ static void tcp_send_challenge_ack(struct sock *sk)
 	static unsigned int challenge_count;
 	u32 now = jiffies / HZ;
 	u32 count;
+	u32 count, now = jiffies / HZ;
 
 	if (now != challenge_timestamp) {
 		u32 half = (sysctl_tcp_challenge_ack_limit + 1) >> 1;
@@ -3713,6 +3714,7 @@ static void tcp_send_challenge_ack(struct sock *sk)
 		ACCESS_ONCE(challenge_count) = half +
 				reciprocal_divide(random32(),
 					sysctl_tcp_challenge_ack_limit);
+			    (u32)(((u64)random32() * sysctl_tcp_challenge_ack_limit) >> 32);
 	}
 	count = ACCESS_ONCE(challenge_count);
 	if (count > 0) {
